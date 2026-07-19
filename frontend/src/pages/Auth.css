@@ -1,0 +1,6 @@
+.auth-page { display: flex; justify-content: center; padding: 60px 24px; }
+.auth-card { width: 100%; max-width: 420px; padding: 32px; }
+.auth-card h1 { font-size: 1.6rem; }
+.auth-switch { margin-top: 16px; text-align: center; }
+.auth-switch a { color: var(--forest-light); font-weight: 600; }
+.auth-hint { margin-top: 8px; text-align: center; font-size: 0.8rem; }

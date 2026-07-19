@@ -1,0 +1,24 @@
+.plp { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start; }
+.plp-filters { padding: 20px; position: sticky; top: 90px; }
+.plp-filters h3 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 20px; }
+.plp-filters h3:first-child { margin-top: 0; }
+.filter-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.filter-list button {
+  background: none; border: none; text-align: left; padding: 6px 0;
+  color: var(--muted); font-size: 0.92rem; width: 100%;
+}
+.filter-list button.active { color: var(--forest-light); font-weight: 700; }
+.price-filter { display: flex; align-items: center; gap: 6px; }
+.price-filter input {
+  width: 100%; padding: 7px 8px; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--paper); color: var(--ink);
+}
+.plp-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.plp-toolbar select {
+  padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-raised); color: var(--ink);
+}
+
+@media (max-width: 800px) {
+  .plp { grid-template-columns: 1fr; }
+  .plp-filters { position: static; }
+}

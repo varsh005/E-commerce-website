@@ -1,0 +1,24 @@
+.order-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+.order-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 18px; transition: border-color 0.15s ease;
+}
+.order-row:hover { border-color: var(--forest); }
+.order-total { font-weight: 700; }
+.status-badge {
+  padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 700;
+  text-transform: capitalize;
+}
+.status-pending, .status-processing { background: #fdf0d5; color: #92660b; }
+.status-paid, .status-delivered { background: #dcefe6; color: var(--forest); }
+.status-shipped { background: #dde8f7; color: #2c548c; }
+.status-cancelled { background: #f6dcd6; color: var(--danger); }
+
+.order-detail h1 { margin-bottom: 8px; }
+.order-detail-grid { display: grid; grid-template-columns: 1fr 320px; gap: 24px; margin-top: 24px; }
+.order-items-card, .order-detail .card { padding: 20px; }
+.success-banner { padding: 14px 18px; background: #dcefe6; border-color: var(--forest-light); color: var(--forest); margin-bottom: 20px; }
+
+@media (max-width: 700px) {
+  .order-detail-grid { grid-template-columns: 1fr; }
+}

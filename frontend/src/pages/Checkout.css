@@ -1,0 +1,11 @@
+.checkout-page h1 { margin-bottom: 24px; }
+.checkout-grid { display: grid; grid-template-columns: 1fr 320px; gap: 32px; align-items: start; }
+.checkout-form { padding: 24px; }
+.checkout-note { font-size: 0.82rem; margin-top: 12px; }
+.checkout-summary { padding: 20px; position: sticky; top: 90px; }
+.checkout-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.92rem; }
+.checkout-line.total { border-top: 1px solid var(--line); margin-top: 8px; font-weight: 700; font-size: 1.1rem; }
+
+@media (max-width: 760px) {
+  .checkout-grid { grid-template-columns: 1fr; }
+}
