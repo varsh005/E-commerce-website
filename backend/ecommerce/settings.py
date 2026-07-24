@@ -22,6 +22,17 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+]
+
+# Cloudinary provides persistent media storage in production — Render's free tier
+# filesystem is ephemeral, so uploaded/generated images don't survive a restart.
+# Set a CLOUDINARY_URL env var (from cloudinary.com, free tier) to enable this;
+# without it, media files just use local disk exactly as before (fine for local dev).
+# Per Cloudinary's docs, these two apps must be listed before 'staticfiles'.
+if os.environ.get('CLOUDINARY_URL'):
+    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
+
+INSTALLED_APPS += [
     'django.contrib.staticfiles',
 
     # Third party
@@ -103,7 +114,9 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STORAGES = {
     'default': {
-        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'
+        if os.environ.get('CLOUDINARY_URL')
+        else 'django.core.files.storage.FileSystemStorage',
     },
     'staticfiles': {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
@@ -165,3 +178,4 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 60 * 60 * 24 * 7  # 1 week; raise once you're confident HTTPS works everywhere
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
