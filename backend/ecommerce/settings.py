@@ -125,6 +125,7 @@ STORAGES = {
 # If a bundled CSS file (e.g. from Django admin) references an optional asset that
 # isn't present, don't fail the whole build over it — just serve that one file
 # unhashed instead of crashing collectstatic.
+
 WHITENOISE_MANIFEST_STRICT = False
 
 MEDIA_URL = '/media/'
