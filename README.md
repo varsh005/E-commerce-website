@@ -2,6 +2,8 @@
 
 A modern full-stack e-commerce platform built with Django REST Framework and React (Vite), featuring secure JWT authentication, shopping cart, wishlist, checkout, admin dashboard, and responsive design.
 
+---
+
 ## Features
 
 **Customer side:** home page, product listing with search/filter/sort, product detail with
@@ -15,6 +17,8 @@ Django admin at `/admin/` or the custom React admin panel at `/admin` in the app
 **Extras included:** JWT auth with auto-refresh, email order confirmation (console backend by
 default), Razorpay payment integration (stubbed until you add real API keys), stock deduction
 on order, responsive layout.
+
+---
 
 ## Project structure
 
@@ -34,6 +38,13 @@ ecommerce-project/
         ├── components/   Navbar, ProductCard, route guards
         └── pages/        all app pages, admin panel under pages/admin
 ```
+---
+## Live Demo
+
+https://e-commerce-website-flame-zeta.vercel.app
+
+---
+
 ### Screenshots
 
 ### Signup/Login page
@@ -57,6 +68,7 @@ ecommerce-project/
 ### Profile page 
 ![profile](screenshots/Profile.png)
 
+---
 
 ## Running it locally in VS Code
 
@@ -182,6 +194,8 @@ URL and a custom domain). Redeploy the backend for it to take effect.
 Visit your frontend URL — it should now load products from the live backend, and
 registration/login/checkout should all work end to end.
 
+---
+
 ## 🛠 Tech Stack
 
 ### Frontend
@@ -225,6 +239,8 @@ registration/login/checkout should all work end to end.
 - Inventory analytics
 - Multi-vendor marketplace
 - Email notifications
+
+---
 
 ## License
 
