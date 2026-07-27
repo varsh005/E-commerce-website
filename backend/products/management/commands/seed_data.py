@@ -1,7 +1,7 @@
 import io
+import base64
 import requests
 from django.core.management.base import BaseCommand
-from django.core.files.base import ContentFile
 from django.contrib.auth import get_user_model
 from PIL import Image, ImageDraw, ImageFont
 from products.models import Category, Product
@@ -19,24 +19,24 @@ CATEGORY_COLORS = {
 }
 
 
-def fetch_real_photo(keyword):
+def fetch_real_photo_bytes(keyword):
     """Downloads a real, royalty-free stock photo matching `keyword` from LoremFlickr
     (a free keyword-based photo service, no API key needed). `keyword` can be comma-separated
-    tags (e.g. 'headphones,audio') for a more specific match. Returns a ContentFile,
+    tags (e.g. 'headphones,audio') for a more specific match. Returns raw JPEG bytes,
     or None if the download fails (e.g. no internet access)."""
     try:
         url = f'https://loremflickr.com/600/600/{keyword}'
         response = requests.get(url, timeout=8)
         response.raise_for_status()
-        safe_name = keyword.replace(',', '-')
-        return ContentFile(response.content, name=f'{safe_name}.jpg')
+        return response.content
     except Exception:
         return None
 
 
-def generate_placeholder_image(product_name, category_name):
+def generate_placeholder_image_bytes(product_name, category_name):
     """Fallback: a simple 600x600 colored square with the product name on it,
-    used only if the real photo download fails (e.g. no internet access)."""
+    used only if the real photo download fails (e.g. no internet access).
+    Returns raw JPEG bytes."""
     color = CATEGORY_COLORS.get(category_name, '#7A7568')
     img = Image.new('RGB', (600, 600), color=color)
     draw = ImageDraw.Draw(img)
@@ -65,13 +65,19 @@ def generate_placeholder_image(product_name, category_name):
         y += 52
 
     buffer = io.BytesIO()
-    img.save(buffer, format='JPEG', quality=85)
-    buffer.seek(0)
-    return ContentFile(buffer.read(), name=f"{product_name.lower().replace(' ', '-')}.jpg")
+    img.save(buffer, format='JPEG', quality=80)
+    return buffer.getvalue()
+
+
+def to_data_uri(jpeg_bytes):
+    """Encodes raw JPEG bytes as a base64 data URI, ready to store directly in the
+    database and use straight in an <img src="..."> — no file storage needed at all."""
+    b64 = base64.b64encode(jpeg_bytes).decode('ascii')
+    return f'data:image/jpeg;base64,{b64}'
 
 
 class Command(BaseCommand):
-    help = 'Seeds the database with sample categories, products (with real stock photos), a coupon, and an admin user.'
+    help = 'Seeds the database with sample categories, products (photos embedded as base64), a coupon, and an admin user.'
 
     def handle(self, *args, **options):
         if not User.objects.filter(username='admin').exists():
@@ -98,25 +104,26 @@ class Command(BaseCommand):
             ('Football', 'Sports', 1299, None, 20, 'football,soccerball'),
         ]
 
-        self.stdout.write('Downloading product photos (falls back to a generated placeholder per item if offline)…')
+        self.stdout.write('Setting up product photos (real photo if reachable, otherwise a generated placeholder)…')
 
         for name, cat_name, price, discount, stock, keyword in products_data:
             slug = name.lower().replace(' ', '-')
-            product, created = Product.objects.get_or_create(
+            product, _ = Product.objects.get_or_create(
                 slug=slug,
                 defaults=dict(
                     name=name, category=categories[cat_name], description=f'High quality {name.lower()}.',
                     price=price, discount_price=discount, stock=stock,
                 )
             )
-            if not product.image:
-                photo = fetch_real_photo(keyword)
-                if photo:
-                    product.image.save(f'{slug}.jpg', photo, save=True)
-                    self.stdout.write(f'  ✓ {name}: real photo downloaded')
+            if not product.image_data:
+                photo_bytes = fetch_real_photo_bytes(keyword)
+                if photo_bytes:
+                    product.image_data = to_data_uri(photo_bytes)
+                    self.stdout.write(f'  ✓ {name}: real photo embedded')
                 else:
-                    product.image.save(f'{slug}.jpg', generate_placeholder_image(name, cat_name), save=True)
-                    self.stdout.write(f'  ⚠ {name}: download failed, used a placeholder instead')
+                    product.image_data = to_data_uri(generate_placeholder_image_bytes(name, cat_name))
+                    self.stdout.write(f'  ⚠ {name}: download failed, used a generated placeholder instead')
+                product.save()
 
         Coupon.objects.get_or_create(code='WELCOME10', defaults={'discount_percent': 10, 'active': True})
 

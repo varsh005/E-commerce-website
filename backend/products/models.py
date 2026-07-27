@@ -25,6 +25,12 @@ class Product(models.Model):
     discount_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     stock = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to='products/', blank=True, null=True)
+    # Stores the seeded product photo as a base64 data URI directly in the database
+    # (e.g. "data:image/jpeg;base64,..."). This sidesteps file-storage entirely —
+    # no dependency on local disk (ephemeral on Render's free tier) or an external
+    # service like Cloudinary. The `image` field above still works normally for
+    # anyone manually uploading a photo through the admin panel later.
+    image_data = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

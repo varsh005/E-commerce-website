@@ -37,14 +37,6 @@ INSTALLED_APPS = [
     'orders',
     'payments',
 ]
-# Note: 'cloudinary_storage' / 'cloudinary' are intentionally NOT added to
-# INSTALLED_APPS. The MediaCloudinaryStorage class (used below in STORAGES)
-# works fine as a plain import without app registration. Registering
-# 'cloudinary_storage' as an app replaces Django's collectstatic command with
-# its own version, which silently skips copying any static file unless
-# STATICFILES_STORAGE is specifically its own cloud storage class — since we
-# want static files served locally via whitenoise (not uploaded to Cloudinary),
-# that override does more harm than good here.
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -111,9 +103,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STORAGES = {
     'default': {
-        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'
-        if os.environ.get('CLOUDINARY_URL')
-        else 'django.core.files.storage.FileSystemStorage',
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
     },
     'staticfiles': {
         # Note: CompressedManifestStaticFilesStorage has a known whitenoise bug where
