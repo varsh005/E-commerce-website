@@ -22,17 +22,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-]
-
-# Cloudinary provides persistent media storage in production — Render's free tier
-# filesystem is ephemeral, so uploaded/generated images don't survive a restart.
-# Set a CLOUDINARY_URL env var (from cloudinary.com, free tier) to enable this;
-# without it, media files just use local disk exactly as before (fine for local dev).
-# Per Cloudinary's docs, these two apps must be listed before 'staticfiles'.
-if os.environ.get('CLOUDINARY_URL'):
-    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
-
-INSTALLED_APPS += [
     'django.contrib.staticfiles',
 
     # Third party
@@ -48,6 +37,14 @@ INSTALLED_APPS += [
     'orders',
     'payments',
 ]
+# Note: 'cloudinary_storage' / 'cloudinary' are intentionally NOT added to
+# INSTALLED_APPS. The MediaCloudinaryStorage class (used below in STORAGES)
+# works fine as a plain import without app registration. Registering
+# 'cloudinary_storage' as an app replaces Django's collectstatic command with
+# its own version, which silently skips copying any static file unless
+# STATICFILES_STORAGE is specifically its own cloud storage class — since we
+# want static files served locally via whitenoise (not uploaded to Cloudinary),
+# that override does more harm than good here.
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -119,14 +116,15 @@ STORAGES = {
         else 'django.core.files.storage.FileSystemStorage',
     },
     'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        # Note: CompressedManifestStaticFilesStorage has a known whitenoise bug where
+        # WHITENOISE_MANIFEST_STRICT=False doesn't reliably suppress missing-reference
+        # errors (e.g. from Django admin's own bundled CSS referencing an icon that
+        # isn't present in some environments). The non-manifest variant avoids this
+        # entirely — same gzip compression, just without hashed cache-busting
+        # filenames, which doesn't matter for this project.
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
     },
 }
-# If a bundled CSS file (e.g. from Django admin) references an optional asset that
-# isn't present, don't fail the whole build over it — just serve that one file
-# unhashed instead of crashing collectstatic.
-
-WHITENOISE_MANIFEST_STRICT = False
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -183,4 +181,3 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 60 * 60 * 24 * 7  # 1 week; raise once you're confident HTTPS works everywhere
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-
