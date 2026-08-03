@@ -4,7 +4,7 @@ A modern full-stack e-commerce platform built with Django REST Framework and Rea
 
 ---
 
-## Features
+## ✨ Features
 
 **Customer side:** home page, product listing with search/filter/sort, product detail with
 reviews & ratings, categories, cart, wishlist, JWT-based registration/login, checkout with
@@ -20,7 +20,7 @@ on order, responsive layout.
 
 ---
 
-## Project structure
+## 📂 Project structure
 
 ```
 ecommerce-project/
@@ -39,13 +39,13 @@ ecommerce-project/
         └── pages/        all app pages, admin panel under pages/admin
 ```
 ---
-## Live Demo
+## 🌐 Live Demo
 
 https://e-commerce-website-flame-zeta.vercel.app
 
 ---
 
-### Screenshots
+## 📸 Screenshots
 
 ### Signup/Login page
 ![signup/login](screenshots/signup-login.png)
@@ -70,7 +70,7 @@ https://e-commerce-website-flame-zeta.vercel.app
 
 ---
 
-## Running it locally in VS Code
+## ▶️ Running it locally in VS Code
 
 ### 1. Backend (Django)
 
@@ -111,13 +111,15 @@ need to change that (e.g. for deployment).
 - Log in as `admin / admin12345` and open the "Admin" link in the navbar to manage products,
   categories, orders, and coupons, and view the sales dashboard.
 
-## Switching to PostgreSQL/MySQL
+---
+
+## 🗄️ Switching to PostgreSQL/MySQL
 
 Edit `backend/ecommerce/settings.py` — the commented-out `DATABASES` block shows the
 PostgreSQL config; install `psycopg2-binary` (or `mysqlclient` for MySQL) and update
 `ENGINE`/credentials accordingly, then re-run `migrate`.
 
-## Enabling real payments (Razorpay)
+## 💳 Enabling real payments (Razorpay)
 
 1. `pip install razorpay` (already in requirements.txt).
 2. Get test API keys from your Razorpay dashboard.
@@ -130,18 +132,18 @@ PostgreSQL config; install `psycopg2-binary` (or `mysqlclient` for MySQL) and up
    `POST /api/payments/create-order/` then `POST /api/payments/verify/` after payment —
    the endpoints and order flow are already built, you just need the client-side widget.
 
-## Enabling real email
+## 📧 Enabling real email
 
 By default emails print to the console (visible in the `runserver` terminal). To send real
 email, uncomment and fill in the SMTP block in `backend/ecommerce/settings.py`.
 
-## Skills this project demonstrates
+## 🧠 Skills this project demonstrates
 
 HTML5, CSS3, JavaScript, React, Python, Django REST Framework, REST API design, JWT auth,
 CRUD operations, relational DB design, file/image upload, payment gateway integration,
 and a deployable Git-ready project structure.
 
-## Deploying it live (backend on Render, frontend on Vercel/Netlify)
+## ☁️ Deploying it live (backend on Render, frontend on Vercel/Netlify)
 
 The code is already production-ready — `settings.py` reads `SECRET_KEY`, `DEBUG`,
 `ALLOWED_HOSTS`, `DATABASE_URL`, and `CORS_ALLOWED_ORIGINS` from environment variables, so
@@ -220,7 +222,9 @@ registration/login/checkout should all work end to end.
 - REST API
 - Git & GitHub
 
-## API Features
+---
+
+## 📌 API Features
 
 - JWT Authentication
 - Product APIs
@@ -231,7 +235,9 @@ registration/login/checkout should all work end to end.
 - Order APIs
 - Payment APIs
 
-## Future Improvements
+---
+
+## 🚀 Future Improvements
 
 - Stripe payment integration
 - Product recommendations
@@ -242,6 +248,6 @@ registration/login/checkout should all work end to end.
 
 ---
 
-## License
+## 📃 License
 
 This project is developed for educational and portfolio purposes.
